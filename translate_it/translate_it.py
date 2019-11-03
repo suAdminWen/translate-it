@@ -8,6 +8,7 @@ def get_content(words):
     res.raise_for_status()
     return res.text
 
+
 def parse(response):
     html = etree.HTML(response)
     contents = html.xpath('//div[@id="results-contents"]')[0]
