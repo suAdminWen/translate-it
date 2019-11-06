@@ -1,10 +1,18 @@
+import re
 import requests
+import appdirs
 from lxml import etree
 from argparse import ArgumentParser
+from cachelib import FileSystemCache, NullCache
+
+CACHE_DIR = appdirs.user_cache_dir('translate_it')
+CACHE_ENTRY_MAX = 128
+
+cache = FileSystemCache(CACHE_DIR, CACHE_ENTRY_MAX, default_timeout=0)
 
 
 def get_content(words):
-    res = requests.get(f'https://dict.youdao.com/w/{" ".join(words)}')
+    res = requests.get(f'https://dict.youdao.com/w/{words}')
     res.raise_for_status()
     return res.text
 
@@ -27,8 +35,14 @@ def parse(response):
 
 
 def tran(words):
-    response = get_content(words)
-    results = parse(response)
+    words = ' '.join(words)
+    results = cache.get(words)
+    if not results:
+        response = get_content(words)
+        results = [re.sub(r'\s', '', result) for result in parse(response)]
+        if results:
+            cache.set(words, results)
+
     return results
 
 

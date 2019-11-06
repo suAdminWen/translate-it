@@ -8,7 +8,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 requires = [
     'requests>=2.22.0',
-    'lxml>=4.4.1'
+    'lxml>=4.4.1',
+    'cachelib',
+    'appdirs'
 ]
 
 
