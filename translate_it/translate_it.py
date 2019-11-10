@@ -12,7 +12,7 @@ cache = FileSystemCache(CACHE_DIR, CACHE_ENTRY_MAX, default_timeout=0)
 
 
 def get_content(words):
-    res = requests.get(f'https://dict.youdao.com/w/{words}')
+    res = requests.get('https://dict.youdao.com/w/{words}'.format(words=words))
     res.raise_for_status()
     return res.text
 
@@ -30,7 +30,7 @@ def parse(response):
             for word in container[0].xpath('p'):
                 klass = word.xpath('string(span[1])')
                 value = word.xpath('string(span[2]/a)')
-                results.append(f'{klass} {value}')
+                results.append('{} {}'.format(klass, value))
     return results
 
 
