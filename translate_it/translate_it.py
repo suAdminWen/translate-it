@@ -3,7 +3,7 @@ import requests
 import appdirs
 from lxml import etree
 from argparse import ArgumentParser
-from cachelib import FileSystemCache, NullCache
+from cachelib import FileSystemCache
 
 CACHE_DIR = appdirs.user_cache_dir('translate_it')
 CACHE_ENTRY_MAX = 128
@@ -39,7 +39,7 @@ def tran(words):
     results = cache.get(words)
     if not results:
         response = get_content(words)
-        results = [re.sub(r'\s', '', result) for result in parse(response)]
+        results = [re.sub(r'\s{2,}?', '', result).strip() for result in parse(response)]
         if results:
             cache.set(words, results)
 
