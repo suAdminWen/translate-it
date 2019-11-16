@@ -13,6 +13,7 @@ _mailinglist
 .cache/
 .pytest_cache/
 .idea/
+.vscode/
 docs/_build/
 .python-version
 

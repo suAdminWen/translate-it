@@ -19,12 +19,17 @@ with open(os.path.join(here, 'translate_it', '__version__.py'),
           'r', 'utf-8') as f:
     exec(f.read(), about)
 
+with open('README.md', 'r', 'utf-8') as f:
+    readme = f.read()
+
 
 setup(
 
     name=about['__name__'],
     version=about['__version__'],
     description=about['__description__'],
+    long_description=readme,
+    long_description_content_type='text/markdown',
     python_requires='>=3.5',
     packages=find_packages(exclude=('tests', 'tests.*')),
     zip_safe=False,
