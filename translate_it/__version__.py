@@ -1,5 +1,5 @@
 __name__ = 'translate-it'
-__version__ = '0.3.2.3'
+__version__ = '0.3.2.4'
 __description__ = 'translate it for me.'
 __license__ = 'Apache 2.0'
 __author__ = 'wen'
