@@ -6,16 +6,11 @@
 #  / /_/ /  / /_/ / / / (__  ) / /_/ / /_/  __/_____/ / /_
 #  \__/_/   \__,_/_/ /_/____/_/\__,_/\__/\___/     /_/\__/
 
-import appdirs
 from argparse import ArgumentParser
-from cachelib import FileSystemCache
 
-from translate_it.dictionaries.youdao import translate
-
-CACHE_DIR = appdirs.user_cache_dir('translate_it')
-CACHE_ENTRY_MAX = 128
-
-cache = FileSystemCache(CACHE_DIR, CACHE_ENTRY_MAX, default_timeout=0)
+from translate_it.dictionaries import translate
+from translate_it.batch import import_words
+from translate_it.config import Config
 
 
 def get_parser():
@@ -24,33 +19,34 @@ def get_parser():
     parser.add_argument('words', metavar='WORDS', type=str,
                         nargs='*', help='the words to translate')
 
+    parser.add_argument('-s', '--save', dest='save',
+                        action='store_true', default=False)
+    parser.add_argument('-u', '--user', dest='user', type=str)
+    parser.add_argument('-p', '--password',
+                        dest='password', type=str)
+    parser.add_argument('-c', '--config', dest='config', type=str)
+    parser.add_argument('-i', '--import', dest='import')
+    parser.add_argument('-e', '--export', dest='export',
+                        action='store_true', default=False)
+
     return parser
-
-
-def printf(result):
-
-    print('\033[1;44m网络释义\033[0m')
-    for content in result.get('contents', ''):
-        print(content)
-
-    print(result.get('additionals', ''))
-    examples = result.get('examples', [])
-    print('\033[1;44m双语例句\033[0m')
-    for index, example in enumerate(examples):
-        print('{}. {}'.format(index + 1, example[0]))
-        print(example[1])
 
 
 def command_line_runner():
     parser = get_parser()
     args = vars(parser.parse_args())
+    config = Config()
 
-    if not args['words']:
-        parser.print_help()
-        return
+    if args['user']:
+        config.update('auth', 'user', args['user'])
+    if args['password']:
+        config.update('auth', 'password', args['password'])
 
-    result = translate(args['words'])
-    printf(result)
+    if args['import']:
+        import_words(args['import'])
+
+    if args['words']:
+        translate(args['words'])
 
 
 if __name__ == '__main__':

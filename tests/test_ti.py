@@ -1,6 +1,6 @@
 import pytest
 
-from translate_it.dictionaries.youdao import translate
+from translate_it.dictionaries import translate
 
 
 @pytest.mark.parametrize('keyword,result', (
